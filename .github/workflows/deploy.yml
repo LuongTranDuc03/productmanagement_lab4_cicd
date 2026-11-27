@@ -1,4 +1,3 @@
-
 name: CI Build Spring Boot App
 
 on:
@@ -26,13 +25,13 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-          
+
       # Cấp quyền thực thi cho file mvn
       - name: Ensure mvnw executable
         run: |
           cd ${{ github.workspace }}
           chmod +x mvnw
-           
+
       # Build NGAY TRONG workspace của runner
       - name: Build with Maven
         working-directory: ${{ github.workspace }}
@@ -47,14 +46,15 @@ jobs:
           cp ${{ github.workspace }}/target/*.jar \
              /home/adluong/product_project/product_source/product-management.jar
           chown adluong:adluong /home/adluong/product_project/product_source/product-management.jar
+
   deploy:
-      name: Deploy Project
-      runs-on: self-hosted
-      needs: build
-      
-      steps:
-        - name: Restart product-app service
-          run: |
-            sudo systemctl daemon-reload
-            sudo systemctl restart product-app
-            sudo systemctl status product-app --no-pager
+    name: Deploy Project
+    runs-on: self-hosted
+    needs: build
+
+    steps:
+      - name: Restart product-app service
+        run: |
+          sudo systemctl daemon-reload
+          sudo systemctl restart product-app
+          sudo systemctl status product-app --no-pager
